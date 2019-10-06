@@ -1,3 +1,8 @@
-
 # API Credentials
 credentials.json
+
+# For use in vs code. Not necessary for the repo. 
+.vscode 
+
+
+token.pickle

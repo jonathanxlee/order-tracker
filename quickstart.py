@@ -36,6 +36,7 @@ def main():
             pickle.dump(creds, token)
 
     service = build('gmail', 'v1', credentials=creds)
+    
 
     # Call the Gmail API
     results = service.users().labels().list(userId='me').execute()
@@ -48,10 +49,16 @@ def main():
         for label in labels:
             print(label['name'])
 
-    print(GetMessage(service,user_id='me',msg_id='FMfcgxwDrbvtZlVvQPsHXvcrgBVfTHhR'))
+    print("Messages:")
+    messages = listMessages(service,user_id='me', query='label:orders')
+    message = messages[0]
+    print(message)
 
 
-def listMessages(service, user_id):
+    message = GetMessage(service,user_id='me',msg_id=message['id'])
+
+
+def listMessages(service, user_id, max_results=1, spam=False, query=''):
     """
     List all Messages of the user's mailbox with label_ids applied.
 
@@ -65,20 +72,25 @@ def listMessages(service, user_id):
     returned list contains Message IDs, you must use get with the
     appropriate id to get the details of a Message.
     """
+    
     try: 
-        response = service.users().messages().list(userId= user_id).execute()
+        response = service.users().messages().list(userId=user_id,includeSpamTrash=spam,maxResults=max_results,q=query).execute()
 
         messages = []
 
         if 'messages' in response: 
-            messages.extend(response['nextPageToken'])
-
-        while 'nextPageToken' in response:
-            page_token = response['nextPageToken']
-            response = service.users().messages().list(userId=user_id,
-                                                 pageToken=page_token).execute()
             messages.extend(response['messages'])
 
+
+
+        # while 'nextPageToken' in response:
+        #     page_token = response['nextPageToken']
+        #     response = service.users().messages().list(userId=user_id,
+        #                                          pageToken=page_token).execute()
+        #     messages.extend(response['messages'])
+
+        #     print('next')
+        
         return messages
     
     except errors.HttpError as error:
@@ -99,7 +111,20 @@ def GetMessage(service, user_id, msg_id):
     A Message.
   """
   try:
-    message = service.users().messages().get(userId=user_id, id=msg_id).execute()
+    message = service.users().messages().get(userId=user_id, id=msg_id, format='full').execute()
+    payload = message['payload']
+    data = payload['body']['data']
+
+
+    #Decode from Base64 to ASCII HTML
+    try:
+        data = base64.b64decode(data)
+        #message['payload']['body']['data'] = data
+
+        print(data)
+    except Exception as err: 
+        print('Converting from Base64 to ASCII failed: /n Error: %s' % err)
+
 
     print('Message snippet: %s' % message['snippet'])
 
