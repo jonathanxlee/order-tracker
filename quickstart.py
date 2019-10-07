@@ -118,8 +118,8 @@ def GetMessage(service, user_id, msg_id):
 
     #Decode from Base64 to ASCII HTML
     try:
+        mail = email.message.EmailMessage()
         message_converted = base64.b64decode(raw) #base64.b64decode(quopri.decodestring(data)) 
-        #message['payload']['body']['data'] = data
 
         print(message_converted)
     except Exception as err: 

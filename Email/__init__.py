@@ -1,6 +1,10 @@
 from email.message import EmailMessage
 import base64
 class Email:
+    """
+    Class thst abstracts the complecxities of the EmailMEssage class.
+
+    """
 
     def __init__(self, mraw): 
         
