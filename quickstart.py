@@ -2,6 +2,7 @@ from __future__ import print_function
 import pickle
 import os.path
 import base64
+import quopri
 import email
 from apiclient import errors
 
@@ -111,19 +112,18 @@ def GetMessage(service, user_id, msg_id):
     A Message.
   """
   try:
-    message = service.users().messages().get(userId=user_id, id=msg_id, format='full').execute()
-    payload = message['payload']
-    data = payload['body']['data']
+    message = service.users().messages().get(userId=user_id, id=msg_id, format='raw').execute()
+    raw = message['raw']
 
 
     #Decode from Base64 to ASCII HTML
     try:
-        data = base64.b64decode(data)
+        message_converted = base64.b64decode(raw) #base64.b64decode(quopri.decodestring(data)) 
         #message['payload']['body']['data'] = data
 
-        print(data)
+        print(message_converted)
     except Exception as err: 
-        print('Converting from Base64 to ASCII failed: /n Error: %s' % err)
+        print('Converting from Base64 to ASCII failed: \n Error: %s' % err)
 
 
     print('Message snippet: %s' % message['snippet'])
