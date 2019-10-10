@@ -1,8 +1,9 @@
-from email.message import EmailMessage
+import mailparser as mp
 import base64
+
 class Email:
     """
-    Class thst abstracts the complecxities of the EmailMEssage class.
+    Class that abstracts the complecxities of the EmailMEssage class.
 
     """
 
@@ -10,15 +11,14 @@ class Email:
         
         if mraw: 
             try: 
-                resource = EmailMessage()
-                resource['Content-Transfer-Encoding'] = 'base64'
-                resource.set_payload(base64.b64encode(mraw))
-                
-                self._message = resource
-            except Exception as error: 
-                print('Errror handling message \n Error: %s' % error)
+                self.message = mp.parse_from_bytes(base64.b64decode(mraw))
 
-    def getMessage(self): 
-        return self._message
+                print("In Constructor")
+                print("Here " + str(self.message.body))
+
+            except Exception as error: 
+                print('Error handling message \nError: %s' % error)
+
+
 
 

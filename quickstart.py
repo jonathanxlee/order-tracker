@@ -4,7 +4,10 @@ import os.path
 import base64
 import quopri
 import email
+from Email import Email
 from apiclient import errors
+import sys
+
 
 #test
 
@@ -19,6 +22,8 @@ def main():
     """Shows basic usage of the Gmail API.
     Lists the user's Gmail labels.
     """
+    
+    sys.setdefaultencoding( "latin-1" )
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -55,7 +60,6 @@ def main():
     print("Messages:")
     messages = listMessages(service,user_id='me', query='label:orders')
     message = messages[0]
-    print(message)
 
 
     message = GetMessage(service,user_id='me',msg_id=message['id'])
@@ -120,12 +124,11 @@ def GetMessage(service, user_id, msg_id):
 
     #Decode from Base64 to ASCII HTML
     try:
-        mail = email.message.EmailMessage()
-        message_converted = base64.b64decode(raw) #base64.b64decode(quopri.decodestring(data)) 
+        mail = Email(raw)
 
-        print(message_converted)
+
     except Exception as err: 
-        print('Converting from Base64 to ASCII failed: \n Error: %s' % err)
+        print('Converting from Base64 to ASCII failed: \nError: %s' % err)
 
 
     print('Message snippet: %s' % message['snippet'])
