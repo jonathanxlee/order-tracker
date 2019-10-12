@@ -3,8 +3,6 @@ import pickle
 import os.path
 import base64
 import quopri
-import email
-from Email import Email
 from apiclient import errors
 import sys
 
@@ -23,7 +21,7 @@ def main():
     Lists the user's Gmail labels.
     """
     
-    sys.setdefaultencoding( "latin-1" )
+    #sys.setdefaultencoding( "latin-1" )
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -115,20 +113,21 @@ def GetMessage(service, user_id, msg_id):
     msg_id: The ID of the Message required.
 
   Returns:
-    A Message.
+    An Email object
   """
   try:
     message = service.users().messages().get(userId=user_id, id=msg_id, format='raw').execute()
-    raw = message['raw']
 
 
     #Decode from Base64 to ASCII HTML
     try:
-        mail = Email(raw)
+        mail = Email(message['raw'])
+
+        print(mail.text.encode('utf-8').decode("ASCII", 'ignore'))
 
 
     except Exception as err: 
-        print('Converting from Base64 to ASCII failed: \nError: %s' % err)
+        print('Instantiating Mail Object Failed : \nError: %s' % err)
 
 
     print('Message snippet: %s' % message['snippet'])

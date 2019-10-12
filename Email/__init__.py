@@ -1,9 +1,9 @@
-import mailparser as mp
 import base64
+from bs4 import BeautifulSoup
 
 class Email:
     """
-    Class that abstracts the complecxities of the EmailMEssage class.
+    Class that abstracts an email and handles the decoding and parsing of an email. 
 
     """
 
@@ -11,13 +11,39 @@ class Email:
         
         if mraw: 
             try: 
-                self.message = mp.parse_from_bytes(base64.b64decode(mraw))
 
+                # Sahil Sahwig's blog helped immensely in understanding how to decode these emails 
+                # Here is a link: https://sahilsehwag.wordpress.com/2017/04/12/using-google-apis-in-python-part-2-gmail-api/
+                self.html = base64.urlsafe_b64decode(mraw.encode('ASCII'))
+                
                 print("In Constructor")
-                print("Here " + str(self.message.body))
+
+                soup = BeautifulSoup(self.html, 'html5lib')
+        
+                #removing scripts, styles and other useless tags
+                [element.extract() for element in soup(['style','script','meta','[document]','head','title'])]
+
+                #getting text from html
+                text = soup.get_text()
+
+                #removing leading/trailing spaces
+                lines = [line.strip() for line in text.splitlines()]
+
+                #breaking multi-headlines into line each
+                chunks = [phrase.strip() for line in lines for phrase in line.split(' ')]
+
+                #removing newlines
+                self.text = '\n'.join([chunk for chunk in chunks])     
 
             except Exception as error: 
                 print('Error handling message \nError: %s' % error)
+
+
+
+
+
+
+
 
 
 
