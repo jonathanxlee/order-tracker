@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/jonathanxlee/order-tracker/issues"
   },
-  "homepage": "https://github.com/jonathanxlee/order-tracker#readme",
+  "homepage": "https://github.com/jonathanxlee/order-tracker/login.html",
   "dependencies": {
     "d3": "^5.12.0",
     "node-static": "^0.7.11"
