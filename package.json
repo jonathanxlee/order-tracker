@@ -1,0 +1,29 @@
+{
+  "name": "order-tracker",
+  "version": "1.0.0",
+  "description": "A Web Application to track order information contained in an email inbox",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathanxlee/order-tracker.git"
+  },
+  "keywords": [
+    "order",
+    "tracker",
+    "email"
+  ],
+  "author": "jonathanxlee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonathanxlee/order-tracker/issues"
+  },
+  "homepage": "https://github.com/jonathanxlee/order-tracker#readme",
+  "dependencies": {
+    "d3": "^5.12.0",
+    "node-static": "^0.7.11"
+  }
+}
